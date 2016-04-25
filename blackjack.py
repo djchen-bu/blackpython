@@ -7,25 +7,22 @@ Created on Thu Apr 21 14:28:07 2016
 import random
 from datetime import datetime
 
+class start():
+    klist = ['d']*13+['c']*13+['h']*13+['s']*13
+    number = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']*4
+    keys = list(zip(klist,number))
+    values = [4]*52
+    ddict = dict(zip(keys,values))
+    global ddict
+
 class cards():
-    def __init__(self,deck = 4):
-        klist = ['d']*13+['c']*13+['h']*13+['s']*13
-        number = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']*4
-        keys = list(zip(klist,number))
-        values = [deck]*52
-        ddict = dict(zip(keys,values))
-        self.ddict = ddict
+    
     def deal(self): #hands out card
         random.seed(datetime.now()) #generates random seed based on time
-        keylist = self.ddict.keys()
+        keylist = ddict.keys()
         rip = random.sample(keylist,1)
         cards.remove(self,rip)
         return rip
-        
-#    def hit(self):  #draws card
-#        
-#    def stand(self):    #ends turn
-#        
     def checkhand(self,hand):    #checks value of hand
         total = 0
         acecheck = False
@@ -41,30 +38,60 @@ class cards():
             total -= 10
         return total
             
-#    def checkdeck(self):    #checks how many cards are left
-#        
+    def checkdeck(self):    #checks how many cards are left
+        print(sum(self.ddict.values()))
     def remove(self,victim):   #removes cards from dictionary at the end of round
         self.ddict[victim[0]] -= 1
         if self.ddict[victim[0]] == 0:
             del self.ddict[victim[0]]
         
-#class dealer(cards): #defines dealer logic
-#    def __init__(self):
-#        dhand = [cards.deal(),cards.deal()]
-#    def check:
-#        cards.checkhand(self,dhand)
-#        if total > 21:
-#            cards.
-#    
-#class player(cards): #defines player logic
-#    def __init__(self):
-#        phand = [cards.deal(),cards.deal()]
-#    def check:
-#        
-#class gameplay(cards,dealer,player):
-#
-#
-#
+class dealer(): #defines dealer logic
+    def __init__(self):
+        d = cards()
+        self.dhand = [d.deal(),d.deal()]
+    def check(self, thold = 17):
+        total = cards.checkhand(self,self.dhand)
+        if total > 21:
+            return False
+        elif total < thold:
+            self.dhand.append(cards.deal())
+            return("hit")
+        else:
+            return True
+    
+class player(): #defines player logic
+    def __init__(self):
+        p = cards()
+        self.phand = [p.deal(),p.deal()]
+    def check(self,thold = 17):
+        total = cards.checkhand(self,self.phand)
+        if total > 21:
+            return False
+        elif total < thold:
+            self.phand.append(cards.deal())
+            return("hit")
+        else:
+            return True
+class gameplay():
+    def __init__(self):
+        self.s = start()
+        self.g = cards()
+        self.d = dealer()
+        self.p = player()
+    def checkplayer(self):
+        chk = self.p.check()
+        if chk == "hit":
+            gameplay.checkplayer()
+        elif chk == False:
+            self.phand = {('0','0'):0}
+            return False
+        elif chk == True:
+            return True
+        print(self.g.checkhand(self.phand))
+
+
 #    def scoreboard(self, dealerscore = 0, playerscore = 0):
 #        
 #        
+a = gameplay()
+a.checkplayer()
