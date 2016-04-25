@@ -7,19 +7,18 @@ Created on Thu Apr 21 14:28:07 2016
 import random
 from datetime import datetime
 
-class start():
-    klist = ['d']*13+['c']*13+['h']*13+['s']*13
-    number = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']*4
-    keys = list(zip(klist,number))
-    values = [4]*52
-    ddict = dict(zip(keys,values))
-    global ddict
-
 class cards():
-    
+    def start(self):
+        klist = ['d']*13+['c']*13+['h']*13+['s']*13
+        number = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']*4
+        keys = list(zip(klist,number))
+        values = [4]*52
+        ddict = dict(zip(keys,values))
+        self.ddict = ddict
+
     def deal(self): #hands out card
         random.seed(datetime.now()) #generates random seed based on time
-        keylist = ddict.keys()
+        keylist = self.ddict.keys()
         rip = random.sample(keylist,1)
         cards.remove(self,rip)
         return rip
@@ -74,8 +73,8 @@ class player(): #defines player logic
             return True
 class gameplay():
     def __init__(self):
-        self.s = start()
         self.g = cards()
+        self.g.start()
         self.d = dealer()
         self.p = player()
     def checkplayer(self):
