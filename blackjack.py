@@ -8,11 +8,11 @@ import random
 from datetime import datetime
 
 class cards():
-    def __init__(self):
+    def __init__(self,deck = 7):
         klist = ['d']*13+['c']*13+['h']*13+['s']*13
         number = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']*4
         keys = list(zip(klist,number))
-        values = [7]*52
+        values = [deck]*52
         ddict = dict(zip(keys,values))
         self.ddict = ddict
     def deal(self): #hands out card
@@ -27,7 +27,7 @@ class cards():
         for i in hand:
             if i[0][1] == 'J' or i[0][1] == 'Q' or i[0][1] == 'K':
                 total += 10
-            elif i[0][1] == "A":
+            elif i[0][1] == 'A':
                 total += 11
                 acecheck = True
             else:
@@ -47,12 +47,11 @@ class dealer(cards): #defines dealer logic
     def __init__(self,c1,c2):
         self.dhand = [c1,c2]
     def check(self,ddeal, total, thold = 17):
- #self.d.checkhand(self.dhand)
         if total < thold:
             self.dhand.append(ddeal)
             return self.dhand
         elif total > 21:
-            return(2)
+            return(0)
         else:
             return(total)
     
@@ -60,20 +59,18 @@ class player(cards): #defines player logic
     def __init__(self,c1,c2):
         self.phand = [c1,c2]
     def check(self,ddeal,total,thold = 17):
-         #self.p.checkhand(self.phand)
         if total < thold:
             self.phand.append(ddeal)
             return self.phand
         elif total > 21:
-            return(2)
+            return(0)
         else:
             return(total)
 class gameplay(player,dealer):
-    def __init__(self):
-        self.c = cards()
+    def __init__(self,deck):
+        self.c = cards(deck)
     def checkplayer(self,p,phand):
         pscore = p.check(self.c.deal(),self.c.checkhand(phand))
-        #print(pscore)
         if type(pscore) ==  list:
             self.checkplayer(p,pscore)
         else:
@@ -81,26 +78,23 @@ class gameplay(player,dealer):
             
     def checkdealer(self,d,dhand):
         dscore = d.check(self.c.deal(),self.c.checkhand(dhand))
-        #print(dscore)
         if type(dscore) ==  list:
             self.checkdealer(d,dscore)
         else:
             return(dscore)    
-a = gameplay()
-c = cards()
+a = gameplay(7)
 pscore = 0
 dscore = 0
 total = 0
-while c.checkdeck() > 20:
-    d = dealer(c.deal(),c.deal())
-    p = player(c.deal(),c.deal())
+while a.c.checkdeck() > 20:
+    d = dealer(a.c.deal(),a.c.deal())
+    p = player(a.c.deal(),a.c.deal())
     total += 1
-    print(a.checkplayer(p,p.phand))
-    print(a.checkdealer(d,d.dhand))
-    
-print(total)
-#    if a.checkplayer(p,p.phand) > a.checkdealer(d,d.dhand):
-#        pscore += 1
-#    if a.checkplayer(p,p.phand) < a.checkdealer(d,d.dhand):
-#        dscore += 1
-#print(pscore/total,dscore/total)
+    a.checkplayer(p,p.phand)
+    a.checkdealer(d,d.dhand)
+    if a.checkplayer(p,p.phand) > a.checkdealer(d,d.dhand):
+        pscore += 1
+    if a.checkplayer(p,p.phand) < a.checkdealer(d,d.dhand):
+        dscore += 1
+        
+print(pscore/total,dscore/total)
