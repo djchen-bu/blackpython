@@ -3,6 +3,7 @@
 
 import random
 from datetime import datetime
+import tkinter as tk
 
 class cards():
     def __init__(self,deck = 7):
@@ -78,20 +79,29 @@ class gameplay(player,dealer):
         if type(dscore) ==  list:
             self.checkdealer(d,dscore)
         else:
-            return(dscore)    
-a = gameplay(7)
-pscore = 0
-dscore = 0
-total = 0
-while a.c.checkdeck() > 20:
-    d = dealer(a.c.deal(),a.c.deal())
-    p = player(a.c.deal(),a.c.deal())
-    total += 1
-    a.checkplayer(p,p.phand)
-    a.checkdealer(d,d.dhand)
-    if a.checkplayer(p,p.phand) > a.checkdealer(d,d.dhand):
-        pscore += 1
-    if a.checkplayer(p,p.phand) < a.checkdealer(d,d.dhand):
-        dscore += 1
-        
-print(pscore/total,dscore/total)
+            return(dscore)   
+class runsim():
+    def __init__(self,root):
+        self.a = gameplay(7)
+        can = tk.Canvas(root, width=500,height=500)
+        can.pack()
+    def startsim(self):
+        pscore = 0
+        dscore = 0
+        total = 0
+        while self.a.c.checkdeck() > 20:
+            d = dealer(self.a.c.deal(),self.a.c.deal())
+            p = player(self.a.c.deal(),self.a.c.deal())
+            total += 1
+            self.a.checkplayer(p,p.phand)
+            self.a.checkdealer(d,d.dhand)
+            if self.a.checkplayer(p,p.phand) > self.a.checkdealer(d,d.dhand):
+                pscore += 1
+            if self.a.checkplayer(p,p.phand) < self.a.checkdealer(d,d.dhand):
+                dscore += 1
+        return(pscore/total,dscore/total)
+base = tk.Tk()
+
+A = runsim(base)
+
+base.mainloop()
