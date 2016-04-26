@@ -12,7 +12,7 @@ class cards():
         klist = ['d']*13+['c']*13+['h']*13+['s']*13
         number = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']*4
         keys = list(zip(klist,number))
-        values = [4]*52
+        values = [7]*52
         ddict = dict(zip(keys,values))
         self.ddict = ddict
     def deal(self): #hands out card
@@ -91,12 +91,14 @@ c = cards()
 pscore = 0
 dscore = 0
 total = 0
-while c.checkdeck() > 15:
+while c.checkdeck() > 20:
     d = dealer(c.deal(),c.deal())
     p = player(c.deal(),c.deal())
     total += 1
     print(a.checkplayer(p,p.phand))
     print(a.checkdealer(d,d.dhand))
+    
+print(total)
 #    if a.checkplayer(p,p.phand) > a.checkdealer(d,d.dhand):
 #        pscore += 1
 #    if a.checkplayer(p,p.phand) < a.checkdealer(d,d.dhand):
