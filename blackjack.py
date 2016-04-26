@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Apr 21 14:28:07 2016
 
-@author: ASS
-"""
+
 import random
 from datetime import datetime
 
