@@ -4,12 +4,11 @@ Created on Thu Apr 21 14:28:07 2016
 
 @author: ASS
 """
-import sys
 import random
 from datetime import datetime
 
 class cards():
-    def start(self):
+    def __init__(self):
         klist = ['d']*13+['c']*13+['h']*13+['s']*13
         number = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']*4
         keys = list(zip(klist,number))
@@ -45,59 +44,61 @@ class cards():
             del self.ddict[victim[0]]
         
 class dealer(cards): #defines dealer logic
-    def __init__(self,ddeal):
-        self.ddeal = ddeal
-        self.dhand = [self.ddeal,self.ddeal]
-    def check(self,ddeal, hand, thold = 17):
-        total = hand #self.d.checkhand(self.dhand)
-        if total > 21:
-            return(0)
-        elif total < thold:
+    def __init__(self,c1,c2):
+        self.dhand = [c1,c2]
+    def check(self,ddeal, total, thold = 17):
+ #self.d.checkhand(self.dhand)
+        if total < thold:
             self.dhand.append(ddeal)
-            self.check(ddeal,hand)
+            return self.dhand
+        elif total > 21:
+            return(2)
         else:
             return(total)
     
 class player(cards): #defines player logic
-    def __init__(self,ddeal):
-        self.ddeal = ddeal
-        self.phand = [self.ddeal,self.ddeal]
-    def check(self,ddeal,hand,thold = 17):
-        total = hand #self.p.checkhand(self.phand)
-        if total > 21 or total == 0:
-            return(0)
-        elif total < thold:
+    def __init__(self,c1,c2):
+        self.phand = [c1,c2]
+    def check(self,ddeal,total,thold = 17):
+         #self.p.checkhand(self.phand)
+        if total < thold:
             self.phand.append(ddeal)
-            self.check(ddeal,hand)
+            return self.phand
+        elif total > 21:
+            return(2)
         else:
             return(total)
 class gameplay(player,dealer):
     def __init__(self):
         self.c = cards()
-        self.c.start()
-        self.pscore = 0
-        self.dscore = 0
-        self.total = 0
-    def dealing(self):
-        if self.c.checkdeck() < 10:
-            sys.exit(self.pscore/self.total,self.dscore/self.total)
-    def checkwinner(self,p,d):
-        if p.check(self.c.deal(),self.c.checkhand(p.phand)) > d.check(self.c.deal(),self.c.checkhand(d.dhand)):
-            self.pscore += 1
-            self.total += 1
-        elif p.check(self.c.deal(),self.c.checkhand(p.phand)) < d.check(self.c.deal(),self.c.checkhand(d.dhand)):
-            self.dscore += 1
-            self.total += 1
+    def checkplayer(self,p,phand):
+        pscore = p.check(self.c.deal(),self.c.checkhand(phand))
+        #print(pscore)
+        if type(pscore) ==  list:
+            self.checkplayer(p,pscore)
         else:
-            self.total += 1
-
-#    def scoreboard(self, dealerscore = 0, playerscore = 0):
-#        
-#        
+            return(pscore)
+            
+    def checkdealer(self,d,dhand):
+        dscore = d.check(self.c.deal(),self.c.checkhand(dhand))
+        #print(dscore)
+        if type(dscore) ==  list:
+            self.checkdealer(d,dscore)
+        else:
+            return(dscore)    
 a = gameplay()
 c = cards()
-while True:
-    a.dealing()
-    d = dealer(c)
-    p = player(c)
-    a.checkwinner(p,d)
+pscore = 0
+dscore = 0
+total = 0
+while c.checkdeck() > 15:
+    d = dealer(c.deal(),c.deal())
+    p = player(c.deal(),c.deal())
+    total += 1
+    print(a.checkplayer(p,p.phand))
+    print(a.checkdealer(d,d.dhand))
+#    if a.checkplayer(p,p.phand) > a.checkdealer(d,d.dhand):
+#        pscore += 1
+#    if a.checkplayer(p,p.phand) < a.checkdealer(d,d.dhand):
+#        dscore += 1
+#print(pscore/total,dscore/total)
