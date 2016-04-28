@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-
 import random
 from datetime import datetime
-import tkinter as tk
 
 class cards():
     def __init__(self,deck = 7):
@@ -44,8 +42,8 @@ class cards():
 class dealer(cards): #defines dealer logic
     def __init__(self,c1,c2):
         self.dhand = [c1,c2]
-    def check(self,ddeal, total, thold = 17):
-        if total < thold:
+    def check(self,ddeal, total):
+        if total < 17:
             self.dhand.append(ddeal)
             return self.dhand
         elif total > 21:
@@ -56,8 +54,8 @@ class dealer(cards): #defines dealer logic
 class player(cards): #defines player logic
     def __init__(self,c1,c2):
         self.phand = [c1,c2]
-    def check(self,ddeal,total,thold = 17):
-        if total < thold:
+    def check(self,ddeal,total):
+        if total < 17:
             self.phand.append(ddeal)
             return self.phand
         elif total > 21:
@@ -81,7 +79,7 @@ class gameplay(player,dealer):
         else:
             return(dscore)   
 
-a = gameplay(7)
+a = gameplay(40)
 pscore = 0
 dscore = 0
 total = 0
@@ -95,4 +93,4 @@ while a.c.checkdeck() > 20:
         pscore += 1
     if a.checkplayer(p,p.phand) < a.checkdealer(d,d.dhand):
         dscore += 1
-print(pscore/total,dscore/total)
+print("player win percentage:{} dealer win percentage:{}".format(pscore/total,dscore/total))
